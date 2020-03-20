@@ -1,6 +1,6 @@
 {
 	"name": "@dated/language-plugin-generator",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Bootstrap a new language plugin and check for missing translations",
 	"repository": "https://github.com/dated/language-plugin-generator",
 	"license": "MIT",
