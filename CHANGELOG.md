@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- fetch base translations from github
 - show missing translation texts
 
 ## 0.0.1 - 2020-03-19

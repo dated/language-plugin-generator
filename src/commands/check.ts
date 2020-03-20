@@ -1,9 +1,13 @@
 import { Command } from "@oclif/command";
+import { addedDiff } from "deep-object-diff";
 import { existsSync, readFileSync } from "fs";
+import got from "got";
 import path from "path";
-import { addedDiff } from 'deep-object-diff';
+import requireFromString from "require-from-string";
 
-const countKeys = (object, count = 0) => {
+import config from "../config";
+
+const countKeys = (object, count = 0): number => {
 	for (const value of Object.values(object)) {
 		if (typeof value === "string" || value === undefined) {
 			count++;
@@ -35,7 +39,19 @@ export default class Check extends Command {
 			this.error(`Failed to find translation file for language "${args.language}"`);
 		}
 
-		const baseTranslations = require("../base").default;
+		let baseTranslations;
+		try {
+			let { body } = await got.get(config.baseTranslationsUrl);
+
+			if (body.startsWith("export default")) {
+				body = body.replace("export default", "module.exports =");
+			}
+
+			baseTranslations = requireFromString(body);
+		} catch (error) {
+			this.error(`Failed to fetch base translations: ${error}`);
+		}
+
 		try {
 			const translations = JSON.parse(readFileSync(filePath, "utf8"));
 
