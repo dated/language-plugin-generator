@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- use readJsonSync to parse translations file
+
 ## 0.1.0 - 2020-03-20
 
 ### Changed

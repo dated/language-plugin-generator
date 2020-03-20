@@ -1,6 +1,7 @@
 import { Command } from "@oclif/command";
 import { addedDiff } from "deep-object-diff";
-import { existsSync, readFileSync } from "fs";
+import { existsSync } from "fs";
+import { readJsonSync } from "fs-extra";
 import got from "got";
 import path from "path";
 import requireFromString from "require-from-string";
@@ -23,8 +24,6 @@ const countKeys = (object, count = 0): number => {
 
 export default class Check extends Command {
 	static description = "Check for missing translations in translation file";
-
-	static flags = {};
 
 	static args = [{ name: "language" }];
 
@@ -66,7 +65,7 @@ export default class Check extends Command {
 		}
 
 		try {
-			const translations = JSON.parse(readFileSync(filePath, "utf8"));
+			const translations = readJsonSync(filePath);
 
 			const deleted = addedDiff(translations.messages, baseTranslations);
 			const deletedCount = countKeys(deleted);
