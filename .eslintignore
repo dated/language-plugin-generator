@@ -1,0 +1,7 @@
+/__tests__/**/*.spec.ts
+/__tests__/unit/coverage/
+/*.js
+/build/
+/config/
+/dist/
+/node_modules/**

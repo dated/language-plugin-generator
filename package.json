@@ -1,0 +1,74 @@
+{
+	"name": "@dated/language-plugin-generator",
+	"version": "0.0.1",
+	"description": "Bootstrap a new language plugin and check for missing translations",
+	"repository": "https://github.com/dated/language-plugin-generator",
+	"license": "MIT",
+	"author": "Edgar Goetzendorff @dated",
+	"bin": {
+		"language-plugin-generator": "./bin/run"
+	},
+	"bugs": "https://github.com/dated/language-plugin-generator/issues",
+	"files": [
+		"/bin",
+		"/dist",
+		"/npm-shrinkwrap.json",
+		"/oclif.manifest.json"
+	],
+	"homepage": "https://github.com/dated/language-plugin-generator",
+	"main": "dist/index",
+	"oclif": {
+		"commands": "./dist/commands",
+		"bin": "language-plugin-generator",
+		"plugins": [
+			"@oclif/plugin-help"
+		]
+	},
+	"types": "dist/index",
+	"scripts": {
+		"postpack": "rimraf oclif.manifest.json",
+		"posttest": "eslint . --ext .ts --config .eslintrc",
+		"prepack": "yarn clean && tsc -b && oclif-dev manifest && oclif-dev readme",
+		"version": "oclif-dev readme && git add README.md",
+		"build": "yarn clean && tsc",
+		"build:watch": "yarn build -w",
+		"clean": "rimraf .coverage dist tmp",
+		"format": "yarn lint && yarn prettier",
+		"lint": "./node_modules/eslint/bin/eslint.js src --ext .ts --fix",
+		"prepublishOnly": "yarn test && yarn build",
+		"prettier": "prettier --write \"./*.{ts,js,json,md}\" \"./**/*.{ts,js,json,md}\"",
+		"test": "jest",
+		"test:watch": "jest --watchAll"
+	},
+	"devDependencies": {
+		"@oclif/dev-cli": "^1.22.2",
+		"@sindresorhus/tsconfig": "^0.7.0",
+		"@types/got": "^9.6.9",
+		"@types/jest": "^25.1.3",
+		"@types/node": "^13.7.7",
+		"@types/prettier": "^1.19.0",
+		"@types/prompts": "^2.0.5",
+		"@types/rimraf": "^2.0.3",
+		"@typescript-eslint/eslint-plugin": "^2.22.0",
+		"@typescript-eslint/parser": "^2.22.0",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.10.0",
+		"eslint-plugin-jest": "^23.8.1",
+		"eslint-plugin-prettier": "^3.1.2",
+		"eslint-plugin-simple-import-sort": "^5.0.1",
+		"jest": "^25.1.0",
+		"jest-extended": "^0.11.5",
+		"prettier": "^1.19.1",
+		"rimraf": "^3.0.2",
+		"ts-jest": "^25.2.1",
+		"typescript": "^3.8.3"
+	},
+	"dependencies": {
+		"@oclif/command": "^1.5.19",
+		"@oclif/config": "^1.14.0",
+		"@oclif/plugin-help": "^2.2.3",
+		"deep-object-diff": "^1.1.0",
+		"got": "^10.6.0",
+		"prompts": "^2.3.2"
+	}
+}
