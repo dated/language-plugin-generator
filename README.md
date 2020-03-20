@@ -10,6 +10,18 @@ yarn global add @dated/language-plugin-generator
 
 ## Usage
 
+### `language-plugin-generator new`
+
+Bootstrap a new language plugin
+
+```
+USAGE
+  $ language-plugin-generator new
+
+OPTIONS
+  --name=name   The name of the package
+```
+
 ### `language-plugin-generator check [language]`
 
 Run this command in the root folder of your language plugin to find missing and outdated keys in your translation file.
