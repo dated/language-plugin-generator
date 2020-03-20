@@ -1,7 +1,7 @@
 import { Command } from "@oclif/command";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
-import { addedDiff, deletedDiff } from 'deep-object-diff';
+import { addedDiff } from 'deep-object-diff';
 
 const countKeys = (object, count = 0) => {
 	for (const value of Object.values(object)) {
@@ -39,7 +39,7 @@ export default class Check extends Command {
 		try {
 			const translations = JSON.parse(readFileSync(filePath, "utf8"));
 
-			const deleted = deletedDiff(baseTranslations, translations.messages);
+			const deleted = addedDiff(translations.messages, baseTranslations);
 			const deletedCount = countKeys(deleted);
 
 			const added = addedDiff(baseTranslations, translations.messages);
@@ -52,7 +52,7 @@ export default class Check extends Command {
 				this.log(JSON.stringify(deleted, null, 2));
 			}
 
-			this.log("\n");
+			this.log("");
 
 			if (!addedCount) {
 				this.log("No keys are outdated - all good!");

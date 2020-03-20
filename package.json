@@ -27,7 +27,6 @@
 	"types": "dist/index",
 	"scripts": {
 		"postpack": "rimraf oclif.manifest.json",
-		"posttest": "eslint . --ext .ts --config .eslintrc",
 		"prepack": "yarn clean && tsc -b && oclif-dev manifest && oclif-dev readme",
 		"version": "oclif-dev readme && git add README.md",
 		"build": "yarn clean && tsc",
@@ -35,7 +34,7 @@
 		"clean": "rimraf .coverage dist tmp",
 		"format": "yarn lint && yarn prettier",
 		"lint": "./node_modules/eslint/bin/eslint.js src --ext .ts --fix",
-		"prepublishOnly": "yarn test && yarn build",
+		"prepublishOnly": "yarn test --passWithNoTests && yarn build",
 		"prettier": "prettier --write \"./*.{ts,js,json,md}\" \"./**/*.{ts,js,json,md}\"",
 		"test": "jest",
 		"test:watch": "jest --watchAll"
