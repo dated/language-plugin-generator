@@ -7,6 +7,8 @@ import requireFromString from "require-from-string";
 
 import config from "../config";
 
+const sourcePath = path.resolve(process.cwd(), "src");
+
 const countKeys = (object, count = 0): number => {
 	for (const value of Object.values(object)) {
 		if (typeof value === "string" || value === undefined) {
@@ -33,7 +35,18 @@ export default class Check extends Command {
 			throw new Error("Language is required");
 		}
 
-		const filePath = path.resolve(process.cwd(), `${args.language}.json`);
+		const languageConfigPath = path.resolve(sourcePath, "index.js");
+		if (!existsSync(languageConfigPath)) {
+			this.error("Failed to locate language configuration");
+		}
+
+		const language = require(languageConfigPath).getLanguages()[args.language];
+
+		if (!language) {
+			this.error(`Failed to find configuration for language "${args.language}"`);
+		}
+
+		const filePath = path.resolve(sourcePath, language.languagePath);
 
 		if (!existsSync(filePath)) {
 			this.error(`Failed to find translation file for language "${args.language}"`);

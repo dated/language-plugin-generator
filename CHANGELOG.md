@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- retrieve translation path from configuration
 - fetch base translations from github
 - show missing translation texts
 

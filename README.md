@@ -12,7 +12,7 @@ yarn global add @dated/language-plugin-generator
 
 ### `language-plugin-generator check [language]`
 
-Run this command in the languages folder of your plugin to find missing and outdated keys in your translation file.
+Run this command in the root folder of your language plugin to find missing and outdated keys in your translation file.
 
 ```
 USAGE
