@@ -1,15 +1,17 @@
 import { Command, flags } from "@oclif/command";
+import cli from "cli-ux";
 import { existsSync, writeFileSync } from "fs";
 import { ensureDirSync, writeJsonSync } from "fs-extra";
 import path from "path";
 import prompts from "prompts";
 
 import config from "../config";
+import { confirm } from "../shared/prompts";
 
 const basePath = path.resolve(process.cwd());
 
 export default class New extends Command {
-	static description = "Bootstrap a new Language Plugin";
+	static description = "bootstrap a new Language Plugin";
 
 	public static flags: Record<string, any> = {
 		name: flags.string({
@@ -22,14 +24,17 @@ export default class New extends Command {
 
 		const packageJson = config.pluginConfig;
 
+		this.log("Please provide some basic information about the plugin.");
+		this.log("You will be able to change all values afterwards by editing the created 'package.json' file.\n");
+
 		let response;
 
 		if (!flags.name) {
 			response = await prompts({
 				type: "text",
 				name: "name",
-				message: "Package name",
-				validate: value => ((!!value || value.length) < 1 ? "You must provide a name" : true),
+				message: "The name of the package",
+				validate: value => ((!!value || value.length) < 1 ? "The package name cannot be empty" : true),
 			});
 		}
 
@@ -43,27 +48,27 @@ export default class New extends Command {
 			{
 				type: "text",
 				name: "author",
-				message: "Plugin author",
+				message: "The author of the plugin",
 			},
 			{
 				type: "text",
 				name: "title",
-				message: "Plugin title",
+				message: "The title of the plugin",
 			},
 			{
 				type: "text",
 				name: "repository",
-				message: "GitHub repository URL",
+				message: "URL ",
 			},
 			{
 				type: "text",
 				name: "languageId",
-				message: "ID of the language",
+				message: "ID of the language (e.g. 'it-IT')",
 			},
 			{
 				type: "text",
 				name: "languageName",
-				message: "Name of the language",
+				message: "Name of the language (e.g. 'Italian')",
 			},
 		]);
 
@@ -85,33 +90,49 @@ export default class New extends Command {
 		const sourcePath = path.join(pluginPath, "src");
 		const languagesPath = path.join(sourcePath, "languages");
 
-		ensureDirSync(languagesPath);
+		await confirm(
+			{ message: `Do you want to bootstrap the "${packageJson.name}" plugin now?`, initial: true },
+			() => {
+				try {
+					cli.action.start(`Bootstrapping "${packageJson.name}" plugin`);
 
-		writeJsonSync(path.join(pluginPath, "package.json"), packageJson, { spaces: 2 });
+					ensureDirSync(languagesPath);
 
-		writeFileSync(
-			path.join(sourcePath, "index.js"),
-			`module.exports = {
-  getLanguages () {
-    return {
-      '${response.languageId}': {
-        languagePath: 'languages/${response.languageId}.json',
-        name: '${response.languageName || response.languageId}'
-      }
-    }
-  }
-}`,
-			{ encoding: "utf8" },
-		);
+					writeJsonSync(path.join(pluginPath, "package.json"), packageJson, { spaces: 2 });
 
-		writeJsonSync(
-			path.join(languagesPath, `${response.languageId}.json`),
-			{
-				dateTimeFormats: {},
-				numberFormats: {},
-				messages: {},
+					writeFileSync(
+						path.join(sourcePath, "index.js"),
+						[
+							"module.exports = {",
+							"  getLanguages () {",
+							"    return {",
+							`      '${response.languageId}': {`,
+							`        languagePath: 'languages/${response.languageId}.json',`,
+							`        name: '${response.languageName || response.languageId}'`,
+							"      }",
+							"    }",
+							"  }",
+							"}",
+							"",
+						].join("\n"),
+						{ encoding: "utf8" },
+					);
+
+					writeJsonSync(
+						path.join(languagesPath, `${response.languageId}.json`),
+						{
+							dateTimeFormats: {},
+							numberFormats: {},
+							messages: {},
+						},
+						{ spaces: 2 },
+					);
+				} catch (error) {
+					this.error(`Failed to create plugin: ${error}`);
+				} finally {
+					cli.action.stop("done");
+				}
 			},
-			{ spaces: 2 },
 		);
 	}
 }

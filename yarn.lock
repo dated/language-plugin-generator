@@ -1189,7 +1189,7 @@ cli-progress@^3.4.0:
     colors "^1.1.2"
     string-width "^2.1.1"
 
-cli-ux@^5.2.1:
+cli-ux@^5.2.1, cli-ux@^5.4.5:
   version "5.4.5"
   resolved "https://registry.yarnpkg.com/cli-ux/-/cli-ux-5.4.5.tgz#1b9e6648754307a1fa59a0c5a9c6be0ed899c2cd"
   integrity sha512-5A6FuU0wPUlfCWUjtizUvNIbXElp6jN9QUJsDibs6F9cVX1kTgaMR3m6KT0R3iriEXpMrmPKV6yYS8XICNuQ6Q==

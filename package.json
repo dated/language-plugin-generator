@@ -66,6 +66,7 @@
 		"@oclif/command": "^1.5.19",
 		"@oclif/config": "^1.14.0",
 		"@oclif/plugin-help": "^2.2.3",
+		"cli-ux": "^5.4.5",
 		"deep-object-diff": "^1.1.0",
 		"fs-extra": "^9.0.0",
 		"got": "^10.6.0",

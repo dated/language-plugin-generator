@@ -2,6 +2,7 @@ import { Command } from "@oclif/command";
 import { addedDiff } from "deep-object-diff";
 import { existsSync } from "fs";
 import { readJsonSync } from "fs-extra";
+import cli from "cli-ux";
 import got from "got";
 import path from "path";
 import requireFromString from "require-from-string";
@@ -23,7 +24,7 @@ const countKeys = (object, count = 0): number => {
 };
 
 export default class Check extends Command {
-	static description = "Check for missing translations in translation file";
+	static description = "check for missing translations in translation file";
 
 	static args = [{ name: "language" }];
 
@@ -53,6 +54,8 @@ export default class Check extends Command {
 
 		let baseTranslations;
 		try {
+			cli.action.start("Fetching base translations");
+
 			let { body } = await got.get(config.baseTranslationsUrl);
 
 			if (body.startsWith("export default")) {
@@ -62,9 +65,13 @@ export default class Check extends Command {
 			baseTranslations = requireFromString(body);
 		} catch (error) {
 			this.error(`Failed to fetch base translations: ${error}`);
+		} finally {
+			cli.action.stop("done");
 		}
 
 		try {
+			cli.action.start(`Checking translations for language "${args.language}"`);
+
 			const translations = readJsonSync(filePath);
 
 			const deleted = addedDiff(translations.messages, baseTranslations);
@@ -72,6 +79,8 @@ export default class Check extends Command {
 
 			const added = addedDiff(baseTranslations, translations.messages);
 			const addedCount = countKeys(added);
+
+			cli.action.stop("done");
 
 			if (!deletedCount) {
 				this.log("No keys are missing - all good!");
